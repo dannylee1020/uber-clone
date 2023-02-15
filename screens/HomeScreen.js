@@ -6,6 +6,7 @@ import NavOptions from "../components/NavOptions";
 import { MAPS_API_KEY } from "@env";
 import { useDispatch } from "react-redux";
 import { setDestination, setOrigin } from "../slices/navSlice";
+import NavFavorites from "../components/NavFavorites";
 
 const HomeScreen = () => {
     const dispatch = useDispatch();
@@ -53,8 +54,9 @@ const HomeScreen = () => {
                     fetchDetails={true}
                     returnKeyType={"search"}
                 />
+                <NavOptions />
+                <NavFavorites />
             </View>
-            <NavOptions />
         </SafeAreaView>
     );
 };
