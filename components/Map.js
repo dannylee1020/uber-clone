@@ -1,4 +1,5 @@
 import React from "react";
+import { useRef, useEffect } from "react";
 import MapView from "react-native-maps";
 import { Marker } from "react-native-maps";
 import tw from "twrnc";
@@ -10,9 +11,20 @@ import { MAPS_API_KEY } from "@env";
 const Map = () => {
     const origin = useSelector(selectOrigin);
     const destination = useSelector(selectDestination);
+    const mapRef = useRef(null);
+
+    useEffect(() => {
+        if (!origin || !destination) return;
+
+        mapRef.current.fitToSuppliedMarkers(["origin", "destination"], {
+            edgePadding: { top: 50, right: 110, bottom: 50, left: 110 },
+        });
+    }, [origin, destination]);
 
     return (
         <MapView
+            ref={mapRef}
+            provider="google"
             style={tw`flex-1`}
             mapType="mutedStandard"
             initialRegion={{
@@ -24,6 +36,8 @@ const Map = () => {
         >
             {origin && destination && (
                 <MapViewDirections
+                    // origin={origin.description}
+                    // destination={destination.description}
                     origin={{
                         latitude: origin.location.lat,
                         longitude: origin.location.lng,
@@ -48,6 +62,18 @@ const Map = () => {
                     title="Origin"
                     description={origin.description}
                     identifier="origin"
+                />
+            )}
+
+            {destination?.location && (
+                <Marker
+                    coordinate={{
+                        latitude: destination.location.lat,
+                        longitude: destination.location.lng,
+                    }}
+                    title="Destination"
+                    description={destination.description}
+                    identifier="destination"
                 />
             )}
         </MapView>
